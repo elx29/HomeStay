@@ -2,6 +2,25 @@
 # HOMESTAY - INTERACTIVE ACCOMMODATION PROGRAM
 # ==========================================
 
+booking = None  # no booking made yet
+
+homestays = [
+    {"name": "KLCC Budget Studio", "state": "Kuala Lumpur", "price": 90, "guests": 2},
+    {"name": "Bukit Bintang Family Suite", "state": "Kuala Lumpur", "price": 180, "guests": 5},
+    {"name": "Chow Kit Backpacker Room", "state": "Kuala Lumpur", "price": 50, "guests": 1},
+
+    {"name": "Georgetown Heritage Room", "state": "Penang", "price": 80, "guests": 2},
+    {"name": "Batu Ferringhi Beach House", "state": "Penang", "price": 220, "guests": 6},
+    {"name": "Gurney Drive Studio", "state": "Penang", "price": 100, "guests": 3},
+
+    {"name": "JB City Apartment", "state": "Johor", "price": 70, "guests": 3},
+    {"name": "Legoland Family Villa", "state": "Johor", "price": 250, "guests": 6},
+    {"name": "Danga Bay Condo", "state": "Johor", "price": 120, "guests": 4},
+
+    {"name": "Jonker Street Heritage Room", "state": "Melaka", "price": 65, "guests": 2},
+    {"name": "Melaka River Loft", "state": "Melaka", "price": 110, "guests": 4},
+    {"name": "Ayer Keroh Family House", "state": "Melaka", "price": 190, "guests": 6},
+]
 
 def choose_state():
     states = {
@@ -25,8 +44,93 @@ def choose_state():
 
     print()
     print(f"You selected {states[state_choice]}.")
-    return state_choice
+    return states[state_choice]
 
+def make_booking():
+    global booking
+
+    selected_state = choose_state()
+
+    pax = int(input("Enter number of guests: "))
+    budget = float(input("Enter your budget per night (RM): "))
+
+    #Find matching homestay
+    results = []
+    for h in homestays:
+        if h["state"] == selected_state and h["guests"] >= pax and h["price"] <= budget:
+            results.append(h)
+
+    print("\n---Available Homestays---")
+
+    if len(results) == 0:
+        print("Sorry, no homestays match your requirements.")
+        return
+
+    results.sort(key=lambda x: x["price"])
+
+    for i, h in enumerate(results, start=1):
+        print(f"\n{i}. {h['name']}")
+        print(f"   Location: {h['state']}")
+        print(f"   Guests: Up to {h['guests']}")
+        print(f"   Price: RM{h['price']:.2f} per night")
+
+    choice = int(input("\nSelect a homestay (enter number): "))
+
+    if choice < 1 or choice > len(results):
+        print("\nInvalid choice.")
+        return
+
+    selected = results[choice - 1]
+    nights = int(input("\nHow many nights would you like to stay? "))
+    total = selected["price"] * nights
+
+    # Booking summary
+    print("\n========== BOOKING SUMMARY ==========")
+    print(f"Homestay: {selected['name']}")
+    print(f"Location: {selected['state']}")
+    print(f"Guests: {pax}")
+    print(f"Price per night: RM{selected['price']:.2f}")
+    print(f"Number of nights: {nights}")
+    print(f"Total cost: RM{total:.2f}")
+
+    confirm = input("\nConfirm booking? (Y/N): ").upper()
+
+    if confirm == "Y":
+        booking = {
+            "name": selected["name"],
+            "state": selected["state"],
+            "guests": pax,
+            "price": selected["price"],
+            "nights": nights,
+            "total": total
+        }
+
+        print("\nBooking confirmed!")
+        print("Thank you for using HomeStay!")
+
+    else:
+        print("\nBooking cancelled.")
+
+def view_booking():
+    if booking is None:
+        print("\nYou have no active booking.")
+    else:
+        print("\n========== YOUR BOOKING ==========")
+        print(f"Homestay: {booking['name']}")
+        print(f"Location: {booking['state']}")
+        print(f"Guests: {booking['guests']}")
+        print(f"Price per night: RM{booking['price']:.2f}")
+        print(f"Nights: {booking['nights']}")
+        print(f"Total cost: RM{booking['total']:.2f}")
+
+def cancel_booking():
+    global booking
+    if booking is None:
+        print("\nYou have no booking to cancel.")
+    else:
+        print(f"\nBooking for {booking['name']} has been cancelled.")
+        booking = None
+        
 
     
 print("=" * 50)
@@ -48,121 +152,22 @@ while True:
     print("4. Exit")
     print("=" * 30)
 
-    choice = input("Enter your choice (1-3): ")
+    choice = input("Enter your choice (1-4): ")
 
     if choice == "1":
-        print("\nMake a booking.")
-        selected_state = choose_state()
+       make_booking()
 
     elif choice == "2":
-        print("\nView your booking.")
+        view_booking()
 
     elif choice == "3":
-        print("\nCancel booking")
+        cancel_booking()
 
     elif choice == "4":
         print("\nExit")
         break
 
     else:
-        print("\nInvalid choice. Please enter a number from 1 to 3.")
+        print("\nInvalid choice. Please enter a number from 1 to 4.")
 
 
-    def search_homestay():
-    global booking
-
-    print("\n========== SEARCH FOR HOMESTAY ==========")
-
-    print("\nChoose a state:")
-    print("1. Kuala Lumpur")
-    print("2. Selangor")
-    print("3. Penang")
-    print("4. Johor")
-    print("5. Melaka")
-
-    state_choice = input("\nEnter your choice: ")
-
-    states = {
-        "1": "Kuala Lumpur",
-        "2": "Selangor",
-        "3": "Penang",
-        "4": "Johor",
-        "5": "Melaka"
-    }
-
-    if state_choice not in states:
-        print("\nInvalid choice.")
-        return
-
-    selected_state = states[state_choice]
-
-    # Number of guests
-    guests = int(input("\nNumber of guests: "))
-
-    # Budget
-    budget = float(input("Budget per night (RM): "))
-
-    # Find suitable homestays
-    results = []
-
-    for homestay in homestays:
-        if (
-            homestay["state"] == selected_state
-            and homestay["guests"] >= guests
-            and homestay["price"] <= budget
-        ):
-            results.append(homestay)
-
-    # Display results
-    print("\n========== AVAILABLE HOMESTAYS ==========")
-
-    if len(results) == 0:
-        print("Sorry, no homestays match your requirements.")
-        return
-
-    for i, homestay in enumerate(results, start=1):
-        print(f"\n{i}. {homestay['name']}")
-        print(f"   Location: {homestay['state']}")
-        print(f"   Guests: Up to {homestay['guests']}")
-        print(f"   Price: RM{homestay['price']:.2f} per night")
-
-    # Select homestay
-    choice = int(input("\nSelect a homestay: "))
-
-    if choice < 1 or choice > len(results):
-        print("\nInvalid choice.")
-        return
-
-    selected = results[choice - 1]
-
-    # Number of nights
-    nights = int(input("\nHow many nights would you like to stay? "))
-
-    total = selected["price"] * nights
-
-    # Booking summary
-    print("\n========== BOOKING SUMMARY ==========")
-    print(f"Homestay: {selected['name']}")
-    print(f"Location: {selected['state']}")
-    print(f"Guests: {guests}")
-    print(f"Price per night: RM{selected['price']:.2f}")
-    print(f"Number of nights: {nights}")
-    print(f"Total cost: RM{total:.2f}")
-
-    confirm = input("\nConfirm booking? (Y/N): ").upper()
-
-    if confirm == "Y":
-        booking = {
-            "name": selected["name"],
-            "state": selected["state"],
-            "guests": guests,
-            "price": selected["price"],
-            "nights": nights,
-            "total": total
-        }
-
-        print("\nBooking confirmed!")
-        print("Thank you for using HomeStay!")
-
-    else:
-        print("\nBooking cancelled.")
