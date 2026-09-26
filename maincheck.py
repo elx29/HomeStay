@@ -1,5 +1,4 @@
-# ==========================================
-# HOMESTAY - INTERACTIVE ACCOMMODATION PROGRAM
+# HomeStay - Affordable Accommodation in Malaysia
 # ==========================================
 
 print("=" * 50)
@@ -11,32 +10,48 @@ print("Find a comfortable and affordable place")
 print("to stay across Malaysia.")
 print("=" * 50)
 
-while True:
 
-    print("\nMAIN MENU")
-    print("=" * 30)
-    print("1. Search for homestay")
-    print("2. View Booking")
-    print("3. Exit")
-    print("=" * 30)
+# Sample homestay data
+homestays = [
+    {
+        "name": "Cozy Kuala Lumpur Stay",
+        "state": "Kuala Lumpur",
+        "guests": 4,
+        "price": 120
+    },
+    {
+        "name": "Family Homestay Selangor",
+        "state": "Selangor",
+        "guests": 6,
+        "price": 150
+    },
+    {
+        "name": "Penang Comfort House",
+        "state": "Penang",
+        "guests": 4,
+        "price": 100
+    },
+    {
+        "name": "Johor Family Apartment",
+        "state": "Johor",
+        "guests": 5,
+        "price": 130
+    },
+    {
+        "name": "Melaka Heritage Homestay",
+        "state": "Melaka",
+        "guests": 4,
+        "price": 110
+    }
+]
 
-    choice = input("Enter your choice (1-3): ")
 
-    if choice == "1":
-        search_homestay()
-
-    elif choice == "2":
-        print("\nYou selected View Booking.")
-
-    elif choice == "3":
-        print("\nYou selected Exit.")
-        break
-
-    else:
-        print("\nInvalid choice. Please enter a number from 1 to 3.")
+# Stores the user's booking
+booking = None
 
 
-    def search_homestay():
+# Search for homestay
+def search_homestay():
     global booking
 
     print("\n========== SEARCH FOR HOMESTAY ==========")
@@ -134,3 +149,47 @@ while True:
 
     else:
         print("\nBooking cancelled.")
+
+
+# View booking
+def view_booking():
+    print("\n========== VIEW BOOKING ==========")
+
+    if booking is None:
+        print("You currently have no booking.")
+        return
+
+    print(f"Homestay: {booking['name']}")
+    print(f"Location: {booking['state']}")
+    print(f"Guests: {booking['guests']}")
+    print(f"Price per night: RM{booking['price']:.2f}")
+    print(f"Number of nights: {booking['nights']}")
+    print(f"Total cost: RM{booking['total']:.2f}")
+    print("Booking Status: Confirmed")
+
+
+# Main Menu
+while True:
+
+    print("\nMAIN MENU")
+    print("=" * 30)
+    print("1. Search for homestay")
+    print("2. View Booking")
+    print("3. Exit")
+    print("=" * 30)
+
+    choice = input("Enter your choice (1-3): ")
+
+    if choice == "1":
+        search_homestay()
+
+    elif choice == "2":
+        view_booking()
+
+    elif choice == "3":
+        print("\nThank you for using HomeStay!")
+        print("Goodbye!")
+        break
+
+    else:
+        print("\nInvalid choice. Please enter a number from 1 to 3.")
