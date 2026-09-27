@@ -5,21 +5,32 @@
 booking = None  # no booking made yet
 
 homestays = [
-    {"name": "KLCC Budget Studio", "state": "Kuala Lumpur", "price": 90, "guests": 2},
-    {"name": "Bukit Bintang Family Suite", "state": "Kuala Lumpur", "price": 180, "guests": 5},
+    {"name": "Convenient stay on KLCC ", "state": "Kuala Lumpur", "price": 77, "guests": 2},
+    {"name": "Reunion Loft @ Cheras", "state": "Kuala Lumpur", "price": 175, "guests": 6},
+    {"name": "Opus KL", "state": "Kuala Lumpur", "price": 190, "guests": 8},
+    {"name": "Central Stay @ Dua Sentral", "state": "Kuala Lumpur", "price": 130, "guests": 4},
     {"name": "Chow Kit Backpacker Room", "state": "Kuala Lumpur", "price": 50, "guests": 1},
+    {"name": "Modern Studio @ Liberty", "state": "Kuala Lumpur", "price": 100, "guests": 2},
 
-    {"name": "Georgetown Heritage Room", "state": "Penang", "price": 80, "guests": 2},
-    {"name": "Batu Ferringhi Beach House", "state": "Penang", "price": 220, "guests": 6},
-    {"name": "Gurney Drive Studio", "state": "Penang", "price": 100, "guests": 3},
+    {"name": "City Town Apartment in Georgetown ", "state": "Penang", "price": 165, "guests": 3},
+    {"name": "Unesco Core", "state": "Penang", "price": 40, "guests": 1},
+    {"name": "Simple Urban Suites", "state": "Penang", "price": 250, "guests": 8},
+    {"name": "Condo In Georgetown", "state": "Penang", "price": 335, "guests": 6},
+    {"name": "Minden Height 5", "state": "Penang", "price": 100, "guests": 1},
 
-    {"name": "JB City Apartment", "state": "Johor", "price": 70, "guests": 3},
-    {"name": "Legoland Family Villa", "state": "Johor", "price": 250, "guests": 6},
-    {"name": "Danga Bay Condo", "state": "Johor", "price": 120, "guests": 4},
+    {"name": "1 Bed Studio", "state": "Johor", "price": 130, "guests": 2},
+    {"name": "Legoland View Apartment in Iskandar Puteri", "state": "Johor", "price": 170, "guests": 2},
+    {"name": "ValueRoomz SouthKey MidVallyey", "state": "Johor", "price": 55, "guests": 1},
+    {"name": "The Gardence Residence Apartment", "state": "Johor", "price": 200, "guests": 4},
+    {"name": "Seaview Luxury Suite @ Danga Bay", "state": "Johor", "price": 500, "guests": 6},
 
+    
     {"name": "Jonker Street Heritage Room", "state": "Melaka", "price": 65, "guests": 2},
-    {"name": "Melaka River Loft", "state": "Melaka", "price": 110, "guests": 4},
-    {"name": "Ayer Keroh Family House", "state": "Melaka", "price": 190, "guests": 6},
+    {"name": "GuestHouse Single Room", "state": "Melaka", "price": 45, "guests": 1},
+    {"name": "Seaview Studio Bathtub @ Imerio Melaka", "state": "Melaka", "price": 110, "guests": 2},
+    {"name": "Signature High Floor 4pax Suite @The Pines Melaka", "state": "Melaka", "price": 105, "guests": 4},
+    {"name": "Jonker Riverwalk Townhouse", "state": "Melaka", "price": 290, "guests": 8},
+    
 ]
 
 def choose_state():
@@ -51,8 +62,15 @@ def make_booking():
 
     selected_state = choose_state()
 
-    pax = int(input("Enter number of guests: "))
+    pax = int(input("Enter number of guests (Maximum 8): "))
+    while pax < 1 or pax > 8:
+        print("Sorry, we don't provide rooms for that many guests yet. We currently support up to 8 guests.")
+        pax = int(input("Enter number of guests (Maximum 8): "))
+
     budget = float(input("Enter your budget per night (RM): "))
+    while budget <= 0:
+        print("Invalid budget. Please enter a positive number.")
+        budget = float(input("Enter your budget per night (RM): "))
 
     #Find matching homestay
     results = []
@@ -66,7 +84,10 @@ def make_booking():
         print("Sorry, no homestays match your requirements.")
         return
 
-    results.sort(key=lambda x: x["price"])
+    def get_price(homestay):
+        return homestay["price"]
+
+    results.sort(key=get_price)
 
     for i, h in enumerate(results, start=1):
         print(f"\n{i}. {h['name']}")
