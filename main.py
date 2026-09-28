@@ -2,7 +2,7 @@
 # HOMESTAY - INTERACTIVE ACCOMMODATION PROGRAM
 # ==========================================
 
-booking = None  # no booking made yet
+booking = []  # no booking made yet
 
 homestays = [
     {"name": "Convenient stay on KLCC ", "state": "Kuala Lumpur", "price": 77, "guests": 2},
@@ -117,14 +117,14 @@ def make_booking():
     confirm = input("\nConfirm booking? (Y/N): ").upper()
 
     if confirm == "Y":
-        booking = {
+        booking.append({
             "name": selected["name"],
             "state": selected["state"],
             "guests": pax,
             "price": selected["price"],
             "nights": nights,
             "total": total
-        }
+        })
 
         print("\nBooking confirmed!")
         print("Thank you for using HomeStay!")
@@ -133,24 +133,44 @@ def make_booking():
         print("\nBooking cancelled.")
 
 def view_booking():
-    if booking is None:
+    if len(booking) == 0:
         print("\nYou have no active booking.")
     else:
         print("\n========== YOUR BOOKING ==========")
-        print(f"Homestay: {booking['name']}")
-        print(f"Location: {booking['state']}")
-        print(f"Guests: {booking['guests']}")
-        print(f"Price per night: RM{booking['price']:.2f}")
-        print(f"Nights: {booking['nights']}")
-        print(f"Total cost: RM{booking['total']:.2f}")
+        for i, b in enumerate(booking, start=1):
+            print(f"\nBooking {i}:")
+            print(f"Homestay: {b['name']}")
+            print(f"Location: {b['state']}")
+            print(f"Guests: {b['guests']}")
+            print(f"Price per night: RM{b['price']:.2f}")
+            print(f"Nights: {b['nights']}")
+            print(f"Total cost: RM{b['total']:.2f}")
 
 def cancel_booking():
-    global booking
-    if booking is None:
+    
+    if len(booking) == 0:
         print("\nYou have no booking to cancel.")
+        return
+
+    print("\n========== YOUR BOOKINGS ==========")
+    for i, b in enumerate(booking, start=1):
+        print(f"{i}. {b['name']} - RM{b['total']:.2f} total")
+
+    choice = int(input("\nEnter the number of the booking to cancel: "))
+
+    if choice < 1 or choice > len(booking):
+        print("\nInvalid choice.")
+        return
+    
+    selected = booking[choice - 1]
+
+    confirm = input(f"Are you sure you want to cancel '{selected['name']}'? (Y/N): ").upper()
+
+    if confirm == "Y":
+        booking.pop(choice - 1)
+        print(f"\nBooking for {selected['name']} has been cancelled.")
     else:
-        print(f"\nBooking for {booking['name']} has been cancelled.")
-        booking = None
+        print("\nCancellation aborted.")
         
 
     
