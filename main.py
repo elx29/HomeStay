@@ -64,7 +64,11 @@ def make_booking():
 
     pax = int(input("Enter number of guests (Maximum 8): "))
     while pax < 1 or pax > 8:
-        print("Sorry, we don't provide rooms for that many guests yet. We currently support up to 8 guests.")
+        if pax < 1:
+            print("Number of guests must be at least 1.")
+        elif pax > 8:
+            print("Sorry, we don't provide rooms for that many guests yet. We currently support up to 8 guests.")
+    
         pax = int(input("Enter number of guests (Maximum 8): "))
 
     budget = float(input("Enter your budget per night (RM): "))
