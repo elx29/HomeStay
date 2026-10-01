@@ -1,6 +1,11 @@
 # ==========================================
 # HOMESTAY - INTERACTIVE ACCOMMODATION PROGRAM
 # ==========================================
+import os
+from datetime import datetime
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 booking = []  # no booking made yet
 
@@ -58,6 +63,7 @@ def choose_state():
     return states[state_choice]
 
 def make_booking():
+    clear_screen()
     global booking
 
     selected_state = choose_state()
@@ -76,6 +82,7 @@ def make_booking():
         print("Invalid budget. Please enter a positive number.")
         budget = float(input("Enter your budget per night (RM): "))
 
+    clear_screen()
     #Find matching homestay
     results = []
     for h in homestays:
@@ -89,6 +96,7 @@ def make_booking():
         return
 
     def get_price(homestay):
+        
         return homestay["price"]
 
     results.sort(key=get_price)
@@ -106,15 +114,36 @@ def make_booking():
         return
 
     selected = results[choice - 1]
-    nights = int(input("\nHow many nights would you like to stay? "))
+
+    while True:
+        date_range = input("\nEnter your stay dates (DD/MM/YYYY-DD/MM/YYYY): ")
+
+        try:
+            check_in_str, check_out_str = date_range.split("-")
+            check_in = datetime.strptime(check_in_str.strip(), "%d/%m/%Y")
+            check_out = datetime.strptime(check_out_str.strip(), "%d/%m/%Y")
+            nights = (check_out - check_in).days
+
+            if nights <= 0:
+                print("Check-out date must be after check-in date.")
+                continue
+
+            break  # valid input, exit the loop
+
+        except ValueError:
+            print("Invalid format. Please use DD/MM/YYYY-DD/MM/YYYY (e.g., 01/01/2026-10/01/2026).")
+
     total = selected["price"] * nights
 
     # Booking summary
+    clear_screen()
     print("\n========== BOOKING SUMMARY ==========")
     print(f"Homestay: {selected['name']}")
     print(f"Location: {selected['state']}")
     print(f"Guests: {pax}")
     print(f"Price per night: RM{selected['price']:.2f}")
+    print(f"Check-in: {check_in.strftime('%d/%m/%Y')}")
+    print(f"Check-out: {check_out.strftime('%d/%m/%Y')}")
     print(f"Number of nights: {nights}")
     print(f"Total cost: RM{total:.2f}")
 
@@ -126,6 +155,8 @@ def make_booking():
             "state": selected["state"],
             "guests": pax,
             "price": selected["price"],
+            "check_in": check_in.strftime('%d/%m/%Y'),
+            "check_out": check_out.strftime('%d/%m/%Y'),
             "nights": nights,
             "total": total
         })
@@ -137,6 +168,7 @@ def make_booking():
         print("\nBooking cancelled.")
 
 def view_booking():
+    clear_screen()
     if len(booking) == 0:
         print("\nYou have no active booking.")
     else:
@@ -148,10 +180,12 @@ def view_booking():
             print(f"Guests: {b['guests']}")
             print(f"Price per night: RM{b['price']:.2f}")
             print(f"Nights: {b['nights']}")
+            print(f"Check-in: {b['check_in']}")
+            print(f"Check-out: {b['check_out']}")
             print(f"Total cost: RM{b['total']:.2f}")
 
 def cancel_booking():
-    
+    clear_screen()
     if len(booking) == 0:
         print("\nYou have no booking to cancel.")
         return
@@ -201,10 +235,10 @@ while True:
 
     if choice == "1":
        make_booking()
-
+    
     elif choice == "2":
         view_booking()
-
+    
     elif choice == "3":
         cancel_booking()
 
