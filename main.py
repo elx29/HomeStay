@@ -68,19 +68,30 @@ def make_booking():
 
     selected_state = choose_state()
 
-    pax = int(input("Enter number of guests (Maximum 8): "))
-    while pax < 1 or pax > 8:
+    while True:
+        try:
+            pax = int(input("Enter number of guests (Maximum 8): "))
+        except ValueError:
+            print("Please enter a valid number.")
+            continue
+
         if pax < 1:
             print("Number of guests must be at least 1.")
         elif pax > 8:
             print("Sorry, we don't provide rooms for that many guests yet. We currently support up to 8 guests.")
+        else:
+            break
     
-        pax = int(input("Enter number of guests (Maximum 8): "))
-
-    budget = float(input("Enter your budget per night (RM): "))
-    while budget <= 0:
-        print("Invalid budget. Please enter a positive number.")
-        budget = float(input("Enter your budget per night (RM): "))
+    while True:
+        try:
+            budget = float(input("Enter your budget per night (RM): "))
+            if budget <= 0:
+                print("Please enter a positive number.")
+                continue
+            break
+        except ValueError:
+            print("Please enter a valid number.")
+  
 
     clear_screen()
     #Find matching homestay
@@ -107,7 +118,12 @@ def make_booking():
         print(f"   Guests: Up to {h['guests']}")
         print(f"   Price: RM{h['price']:.2f} per night")
 
-    choice = int(input("\nSelect a homestay (enter number): "))
+    while True:
+        try:
+            choice = int(input("\nSelect a homestay (enter number): "))
+            break
+        except ValueError:
+            print("Please enter a valid number.")
 
     if choice < 1 or choice > len(results):
         print("\nInvalid choice.")
