@@ -140,6 +140,12 @@ def make_booking():
             check_out = datetime.strptime(check_out_str.strip(), "%d/%m/%Y")
             nights = (check_out - check_in).days
 
+            today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+            if check_in < today:
+                print("Check-in date cannot be in the past.")
+                continue
+
             if nights <= 0:
                 print("Check-out date must be after check-in date.")
                 continue
